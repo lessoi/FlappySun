@@ -11,6 +11,9 @@ import android.os.Handler;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -141,7 +144,14 @@ public class Game extends View {
 
         //Draw the background here.
         canvas.drawBitmap(background, null, screenSize, null);
-        if (yPosition <= screenPoint.y - sun.getHeight() && yPosition >= 0) {
+
+        //If the speed is negative, the bird should smile. Or it should post a simalian.
+        if (speed < 0) {
+            canvas.drawBitmap(smilesun, xPosition, yPosition, null);
+        } else {
+            canvas.drawBitmap(sun, xPosition, yPosition, null);
+        }
+        if (yPosition <= screenPoint.y - sun.getHeight() && yPosition >= 0 && !(hit(xPosition, yPosition))) {
             for (int i = 0; i <= 3; i++) {
                 obsX[i] -= gameSpeed;
                 if (obsX[i] <= - upper.getWidth()) {
@@ -155,15 +165,13 @@ public class Game extends View {
             speed += gravity;
             yPosition += speed;
         } else {
+            for (int i = 0; i <= 3; i++) {
+                canvas.drawBitmap(upper, obsX[i], upperY[i] - upper.getHeight(), null);
+                canvas.drawBitmap(lower, obsX[i], lowerY[i], null);
+            }
             canvas.drawBitmap(gameover, (screenPoint.x - gameover.getWidth()) / 2, (screenPoint.y - gameover.getHeight()) / 2, null);
         }
 
-        //If the speed is negative, the bird should smile. Or it should post a simalian.
-        if (speed < 0) {
-            canvas.drawBitmap(smilesun, xPosition, yPosition, null);
-        } else {
-            canvas.drawBitmap(sun, xPosition, yPosition, null);
-        }
 
         //Set a delay. It can also work as a timer.
         handler.postDelayed(runnable, 30);
@@ -184,4 +192,20 @@ public class Game extends View {
         return true;
     }
 
+    public boolean hit(int x, int y) {
+        boolean hit = false;
+        Rect sun = new Rect(x - smilesun.getWidth() / 2, y - smilesun.getHeight() / 2, x + smilesun.getWidth() / 2, y + smilesun.getHeight() / 2);
+        List<Rect> obs = new ArrayList<>();
+        for (int i = 0; i <= 3; i++) {
+            obs.add(new Rect(obsX[i] - upper.getWidth() / 2, upperY[i] - upper.getHeight() / 2, obsX[i] + upper.getWidth() / 2, upperY[i] + upper.getHeight() / 2));
+            obs.add(new Rect(obsX[i] - lower.getWidth() / 2, lowerY[i] - lower.getHeight() / 2, obsX[i] + lower.getWidth() / 2, lowerY[i] + lower.getHeight() / 2));
+        }
+        for (Rect pipe : obs) {
+            if (sun.intersect(pipe)) {
+                hit = true;
+                break;
+            }
+        }
+        return hit;
+    }
 }
