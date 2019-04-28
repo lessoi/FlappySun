@@ -2,7 +2,6 @@ package com.example.flappysun;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -12,8 +11,7 @@ import android.os.Handler;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
+import java.util.Random;
 
 /**
  * The Game.class which extends View.class would be the main class where we start our game by drawing everything on a canvas with onDraw() method.
@@ -65,16 +63,34 @@ public class Game extends View {
     Bitmap gameover = BitmapFactory.decodeResource(getResources(), R.drawable.wasted);
 
     /**
+     * Initialise the image of the obstacles.
+     */
+    Bitmap upper = BitmapFactory.decodeResource(getResources(), R.drawable.hightube);
+    Bitmap lower = BitmapFactory.decodeResource(getResources(), R.drawable.lowtube);
+
+    /**
      * Initialise some important indexes, such as the speed of our bird (positive as going down and negative as going up), gravity, and its xPosition and yPosition.
      */
     private int speed;
     private int gravity = 1;
     private int xPosition;
     private int yPosition;
+    private int gap = 500;
+    private int[] obsX = new int[4];
+    private int[] upperY = new int[4];
+    private int[] lowerY = new int[4];
+    private int minHeight;
+    private int maxHeight;
+    private int distance = 50;
+    private int gameSpeed = 10;
+
+    Random random = new Random();
 
     //private ImageButton restartButton;
 
-    /** The constructor.
+    /**
+     * The constructor.
+     *
      * @param context The context.
      */
     Game(Context context) {
@@ -99,17 +115,24 @@ public class Game extends View {
         //The position of our bird should be at exactly the middle of our screen at the beginning.
         xPosition = (screenPoint.x - sun.getWidth()) / 2;
         yPosition = (screenPoint.y - sun.getHeight()) / 2;
-
-
+        distance = (screenPoint.x * 3) / 4;
+        minHeight = gap;
+        maxHeight = screenPoint.y - gap;
+        for (int i = 0; i <= 3; i++) {
+            obsX[i] = screenPoint.x + i * distance;
+            upperY[i] = minHeight + random.nextInt(maxHeight - minHeight);
+            lowerY[i] = upperY[i] + gap;
+        }
     }
-    //MainActivity main = new MainActivity();
 
     /**
      * The boolean to judge if the bird is dead. If so, the game should be over immediately, or it continues.
      */
     private boolean dead = false;
 
-    /** We override the default onDraw method to draw our background, bird, obstacles, and other images.
+    /**
+     * We override the default onDraw method to draw our background, bird, obstacles, and other images.
+     *
      * @param canvas The canvas. (our screen)
      */
     @Override
@@ -118,6 +141,22 @@ public class Game extends View {
 
         //Draw the background here.
         canvas.drawBitmap(background, null, screenSize, null);
+        if (yPosition <= screenPoint.y - sun.getHeight() && yPosition >= 0) {
+            for (int i = 0; i <= 3; i++) {
+                obsX[i] -= gameSpeed;
+                if (obsX[i] <= - upper.getWidth()) {
+                    obsX[i] += 4 * distance;
+                    upperY[i] = minHeight + random.nextInt(maxHeight - minHeight);
+                    lowerY[i] = upperY[i] + gap;
+                }
+                canvas.drawBitmap(upper, obsX[i], upperY[i] - upper.getHeight(), null);
+                canvas.drawBitmap(lower, obsX[i], lowerY[i], null);
+            }
+            speed += gravity;
+            yPosition += speed;
+        } else {
+            canvas.drawBitmap(gameover, (screenPoint.x - gameover.getWidth()) / 2, (screenPoint.y - gameover.getHeight()) / 2, null);
+        }
 
         //If the speed is negative, the bird should smile. Or it should post a simalian.
         if (speed < 0) {
@@ -128,35 +167,15 @@ public class Game extends View {
 
         //Set a delay. It can also work as a timer.
         handler.postDelayed(runnable, 30);
-
-        //Judge if the bird is outside the screen. If so, the game should be over immediately.
-        if (yPosition <= screenPoint.y - sun.getHeight() && yPosition >= 0) {
-            speed += gravity;
-            yPosition += speed;
-        } else {
-            dead = true;
-            canvas.drawBitmap(gameover, (screenPoint.x - gameover.getWidth()) / 2, (screenPoint.y - gameover.getHeight()) / 2, null);
-
-            //Try to set the Restart button here.
-            Intent tryToRestart = get
-            MainActivity.restartButton.setVisibility(VISIBLE);
-
-            main.restartButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dead = false;
-                    //System.out.println("button works");
-                    main.game(v);
-                }
-            });
-
-        }
     }
 
-    /** Set a monitor on our screen to judge if the user touches it. If so, the bird should slow down, or fly upwards.
+    /**
+     * Set a monitor on our screen to judge if the user touches it. If so, the bird should slow down, or fly upwards.
+     *
      * @param event The event happened on the screen.
      * @return Returning true means that we have already used this event.
      */
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -164,4 +183,5 @@ public class Game extends View {
         }
         return true;
     }
+
 }
