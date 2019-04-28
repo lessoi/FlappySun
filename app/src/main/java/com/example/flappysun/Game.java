@@ -84,7 +84,7 @@ public class Game extends View {
     private int[] lowerY = new int[4];
     private int minHeight;
     private int maxHeight;
-    private int distance = 50;
+    private int distance = 700;
     private int gameSpeed = 10;
 
     Random random = new Random();
@@ -118,12 +118,11 @@ public class Game extends View {
         //The position of our bird should be at exactly the middle of our screen at the beginning.
         xPosition = (screenPoint.x - sun.getWidth()) / 2;
         yPosition = (screenPoint.y - sun.getHeight()) / 2;
-        distance = (screenPoint.x * 3) / 4;
         minHeight = gap;
         maxHeight = screenPoint.y - gap;
         for (int i = 0; i <= 3; i++) {
             obsX[i] = screenPoint.x + i * distance;
-            upperY[i] = minHeight + random.nextInt(maxHeight - minHeight);
+            upperY[i] = gap + random.nextInt(maxHeight - minHeight);
             lowerY[i] = upperY[i] + gap;
         }
     }
@@ -151,7 +150,7 @@ public class Game extends View {
         } else {
             canvas.drawBitmap(sun, xPosition, yPosition, null);
         }
-        if (yPosition <= screenPoint.y - sun.getHeight() && yPosition >= 0 && !(hit(xPosition, yPosition))) {
+        if (yPosition <= screenPoint.y - sun.getHeight() && yPosition >= 0 && !hit(xPosition, yPosition)) {
             for (int i = 0; i <= 3; i++) {
                 obsX[i] -= gameSpeed;
                 if (obsX[i] <= - upper.getWidth()) {
@@ -169,6 +168,7 @@ public class Game extends View {
                 canvas.drawBitmap(upper, obsX[i], upperY[i] - upper.getHeight(), null);
                 canvas.drawBitmap(lower, obsX[i], lowerY[i], null);
             }
+            dead = true;
             canvas.drawBitmap(gameover, (screenPoint.x - gameover.getWidth()) / 2, (screenPoint.y - gameover.getHeight()) / 2, null);
         }
 
@@ -194,11 +194,11 @@ public class Game extends View {
 
     public boolean hit(int x, int y) {
         boolean hit = false;
-        Rect sun = new Rect(x - smilesun.getWidth() / 2, y - smilesun.getHeight() / 2, x + smilesun.getWidth() / 2, y + smilesun.getHeight() / 2);
+        Rect sun = new Rect(x - (smilesun.getWidth() / 2), y, x + (smilesun.getWidth() / 2), y + smilesun.getHeight());
         List<Rect> obs = new ArrayList<>();
         for (int i = 0; i <= 3; i++) {
-            obs.add(new Rect(obsX[i] - upper.getWidth() / 2, upperY[i] - upper.getHeight() / 2, obsX[i] + upper.getWidth() / 2, upperY[i] + upper.getHeight() / 2));
-            obs.add(new Rect(obsX[i] - lower.getWidth() / 2, lowerY[i] - lower.getHeight() / 2, obsX[i] + lower.getWidth() / 2, lowerY[i] + lower.getHeight() / 2));
+            obs.add(new Rect(obsX[i] - upper.getWidth() / 2, 0, obsX[i] + upper.getWidth() / 2, upperY[i]));
+            obs.add(new Rect(obsX[i] - upper.getWidth() / 2, lowerY[i], obsX[i] + upper.getWidth() / 2, screenPoint.y));
         }
         for (Rect pipe : obs) {
             if (sun.intersect(pipe)) {
