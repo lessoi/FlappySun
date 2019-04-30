@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
+
 public class MainActivity extends Activity {
     Game gameView;
 
@@ -15,6 +16,7 @@ public class MainActivity extends Activity {
 
     /**
      * The "game" function. When the function is called, it initialises a Game.class instance and starts a new game.
+     *
      * @param view The game view.
      */
     public void game(View view) {
