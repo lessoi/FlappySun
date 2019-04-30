@@ -126,18 +126,20 @@ public class Game extends View {
     /**
      * This function initialises the position of the "bird" when game starts.
      */
-    public void positionInitializer() {
+    public void initialiser() {
+
+        //Initialise the position of the bird.
         xPosition = (screenPoint.x - sun.getWidth()) / 2;
         yPosition = (screenPoint.y - sun.getHeight()) / 2;
-    }
 
-    public void generateObstacles() {
+        //Initialise the position of the obstacles.
         for (int i = 0; i <= 3; i++) {
             obsX[i] = screenPoint.x + i * distance;
             upperY[i] = random.nextInt(screenPoint.y - gap);
             lowerY[i] = upperY[i] + gap;
         }
     }
+
 
     /**
      * The constructor.
@@ -153,8 +155,7 @@ public class Game extends View {
             }
         };
         getScreen();
-        positionInitializer();
-        generateObstacles();
+        initialiser();
     }
 
     /**
