@@ -1,12 +1,11 @@
 package com.example.flappysun;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-
 public class MainActivity extends Activity {
-    Game gameView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +19,8 @@ public class MainActivity extends Activity {
      * @param view The game view.
      */
     public void game(View view) {
-        gameView = new Game(this);
-        setContentView(gameView);
+        Intent intent = new Intent(this, SetUp.class);
+        startActivity(intent);
+        finish();
     }
 }

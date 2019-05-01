@@ -19,7 +19,7 @@ import java.util.Random;
 /**
  * The Game.class which extends View.class would be where we start our game by drawing everything on a canvas with onDraw() method.
  */
-public class Game extends View {
+public class NewYork extends View {
     /**
      * Initialise the screen as a Display.
      */
@@ -38,7 +38,7 @@ public class Game extends View {
     /**
      * Initialise the background by using BitmapFactory.decodeResource(getResources(), imageLocation) method.
      */
-    Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.chengdu);
+    Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.newyork);
 
     /**
      * Initialise the point of the screen, which helps us to adjust the size of our background image.
@@ -145,7 +145,7 @@ public class Game extends View {
      * The constructor.
      * @param context The context.
      */
-    Game(Context context) {
+    NewYork(Context context) {
         super(context);
         handler = new Handler();
         runnable = new Runnable() {
@@ -259,7 +259,7 @@ public class Game extends View {
             int y = (int)event.getY();
             Rect ha = new Rect((screenPoint.x - restart.getWidth()) / 2, (screenPoint.y - gameover.getHeight()) / 2 + gameover.getHeight(), (screenPoint.x - restart.getWidth()) / 2 + restart.getWidth(), (screenPoint.y - gameover.getHeight()) / 2 + gameover.getHeight() + restart.getHeight());
             if (ha.contains(x, y)) {
-                ((MainActivity)this.getContext()).game(this);
+                ((SetUp)this.getContext()).newyork(this);
             }
         }
         return true;

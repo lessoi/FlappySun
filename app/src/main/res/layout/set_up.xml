@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/setUp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/startbackground"
+    tools:context="com.example.flappysun.SetUp">
+
+    <Button
+        android:id="@+id/chengDu"
+        android:layout_width="166dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="300dp"
+        android:onClick="chengdu"
+        android:text="Chengdu"
+        android:textAllCaps="true" />
+
+    <Button
+        android:id="@+id/beiJing"
+        android:layout_width="166dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="200dp"
+        android:onClick="beijing"
+        android:text="Beijing"
+        android:textAllCaps="true" />
+
+    <Button
+        android:id="@+id/newYork"
+        android:layout_width="166dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="400dp"
+        android:onClick="newyork"
+        android:text="New York"
+        android:textAllCaps="true" />
+</RelativeLayout>
