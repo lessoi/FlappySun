@@ -5,6 +5,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Handler;
@@ -110,6 +112,11 @@ public class Chengdu extends View {
     public boolean okToRestart = false;
 
     /**
+     * Our score.
+     */
+    private int score = 6324;
+
+    /**
      * This function could get the sizes of our screen.
      */
     public void getScreen() {
@@ -140,6 +147,12 @@ public class Chengdu extends View {
         }
     }
 
+    /**
+     * This function counts the score for the user.
+     */
+    public void score() {
+        score--;
+    }
 
     /**
      * The constructor.
@@ -200,6 +213,10 @@ public class Chengdu extends View {
             canvas.drawBitmap(sun, xPosition, yPosition, null);
         }
 
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setTextSize(50);
         //Check if the game should continue or is already over.
         if (yPosition <= screenPoint.y - sun.getHeight() && yPosition >= 0 && !hit(xPosition, yPosition)) {
 
@@ -211,7 +228,8 @@ public class Chengdu extends View {
                     upperY[i] = random.nextInt(screenPoint.y - gap);
                     lowerY[i] = upperY[i] + gap;
                 }
-
+                score();
+                canvas.drawText("Your score is:" + String.valueOf(score), 100, 100, paint);
                 canvas.drawBitmap(upper, obsX[i], upperY[i] - upper.getHeight(), null);
                 canvas.drawBitmap(lower, obsX[i], lowerY[i], null);
             }
@@ -231,6 +249,8 @@ public class Chengdu extends View {
                 canvas.drawBitmap(lower, obsX[i], lowerY[i], null);
             }
 
+            paint.setTextSize(80);
+            canvas.drawText("Your score is:" + String.valueOf(score), 220, screenPoint.y / 3, paint);
             //Show the gameOver image and restart "button".
             canvas.drawBitmap(gameover, (screenPoint.x - gameover.getWidth()) / 2, (screenPoint.y - gameover.getHeight()) / 2 - gameover.getHeight(), null);
             canvas.drawBitmap(restart, (screenPoint.x - restart.getWidth()) / 2, (screenPoint.y - gameover.getHeight()) / 2 + gameover.getHeight(), null);
