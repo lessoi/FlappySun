@@ -228,11 +228,12 @@ public class Chengdu extends View {
                     upperY[i] = random.nextInt(screenPoint.y - gap);
                     lowerY[i] = upperY[i] + gap;
                 }
-                score();
-                canvas.drawText("Your score is:" + String.valueOf(score), 100, 100, paint);
                 canvas.drawBitmap(upper, obsX[i], upperY[i] - upper.getHeight(), null);
                 canvas.drawBitmap(lower, obsX[i], lowerY[i], null);
             }
+
+            score();
+            canvas.drawText("Your score is:" + String.valueOf(score), 100, 100, paint);
 
             //The bird goes down.
             int speed0 = speed;
